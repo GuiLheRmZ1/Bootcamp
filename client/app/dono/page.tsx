@@ -1,12 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+
+import { WalrusUploader } from "../../walrus/walrusUploader";
 import { useGalleryData } from "@/hooks/useGalleryData";
 import { useCurrentAccount, ConnectButton } from "@mysten/dapp-kit";
+import { useState } from "react";
 
 export default function Owner() {
-  const currentAccount = useCurrentAccount();
   const { galleryData } = useGalleryData();
+  const [estado, setEstado] = useState(0);
 
   return (
     <div className="flex flex-col items-center">
@@ -14,8 +17,12 @@ export default function Owner() {
         <ConnectButton />
       </div>
 
-      <Button>Coletar dinheiro</Button>
-      <Button>Publicar imagem</Button>
+      <div className="flex gap-2">
+        <Button>Coletar dinheiro</Button>
+        <Button onClick={() => setEstado(2)}>Publicar imagem</Button>
+      </div>
+
+      {estado === 2 && <WalrusUploader />}
     </div>
   );
 }

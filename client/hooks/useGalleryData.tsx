@@ -1,25 +1,40 @@
 "use client";
 
 import { useSuiClient, useCurrentAccount } from "@mysten/dapp-kit";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState} from "react";
 
 export const useGalleryData = () => {
   const currentAccount = useCurrentAccount();
+  const[galleryInfo, setGalleryInfo] = useState(null);
   const client = useSuiClient();
 
-  const galleryData = async () => {
+  
+  const galleryData : any = async () => {
     const gallery: any = await client.getObject({
-      id: "0xc8fd6fcb325ae9628ef42e57ed4673b55c60283887885a0be14ff0113237ef52",
+      id: process.env.NEXT_PUBLIC_GALLERY_OBJECT_ID as string,
       options: {
         showContent: true,
         showOwner: true,
       },
     });
 
-    return { ...gallery.data.content.fields };
+    const adminCap : any = await client.getObject({
+      id : process.env.NEXT_PUBLIC_ADMIN_CAP_ID as string,
+      options:{
+        showOwner: true
+      }
+    })
+
+    setGalleryInfo({ ...gallery.data.content.fields, owner :adminCap.data?.owner?.AddressOwner || false});
   };
+
+  const isOwner = useMemo(() => {
+    if(!galleryData || !currentAccount)
+    return galleryData.owner === currentAccount?.address;
+  }, [currentAccount, galleryData])
 
   return {
     galleryData,
+    isOwner,
   };
 };

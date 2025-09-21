@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "App SUI",
-  description: "Um App daora",
+  title: "Meu primeiro APP",
+  description: "Foi difil",
 };
 
 export default function RootLayout({
